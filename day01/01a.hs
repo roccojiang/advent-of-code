@@ -1,4 +1,5 @@
 -- Checks for the two unique entries that sum to 2020.
+-- A solution is guaranteed to exist.
 -- Returns the product of those two entries.
 findEntries :: [Int] -> Int
 findEntries (x : xs)
