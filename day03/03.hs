@@ -1,10 +1,9 @@
-treeTraverseDown1 :: [String] -> Int -> Int -> Int
-treeTraverseDown1 ls right len
-  = length [l | (l, i) <- zip (drop 1 ls) [0..], l !! ((right * (i + 1)) `mod` len) == '#']
-
-treeTraverseDown2 :: [String] -> Int -> Int -> Int
-treeTraverseDown2 ls right len
-  = length [l | (l, i) <- zip (drop 2 ls) [0..], l !! ((right * ((i `div` 2) + 1)) `mod` len) == '#', even i]
+treeTraverse :: [String] -> Int -> Int -> Int -> Int
+treeTraverse ls right down len
+  = length [l | (l, i) <- zip (drop down ls) [0..],
+                          let i' = i `div` down,
+                          l !! ((right * (i' + 1)) `mod` len) == '#',
+                          i `mod` down == 0]
 
 main :: IO()
 main
@@ -12,11 +11,9 @@ main
       s <- readFile "03.txt"
       let ls = lines s
           len = length $ head ls
-          r1d1 = treeTraverseDown1 ls 1 len
-          r3d1 = treeTraverseDown1 ls 3 len
-          r5d1 = treeTraverseDown1 ls 5 len
-          r7d1 = treeTraverseDown1 ls 7 len
-          r1d2 = treeTraverseDown2 ls 1 len
+          slopes = [(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)]
 
-      putStrLn $ "Part 1: " ++ show r3d1
-      putStrLn $ "Part 2: " ++ (show $ product [r1d1, r3d1, r5d1, r7d1, r1d2])
+      putStrLn $ "Part 1: " ++ (show $ treeTraverse ls 3 1 len)
+      putStrLn $ "Part 2: " ++ (show $
+                                product $
+                                map (\(x, y) -> treeTraverse ls x y len) slopes)
