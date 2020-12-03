@@ -18,6 +18,5 @@ main
           r7d1 = treeTraverseDown1 ls 7 len
           r1d2 = treeTraverseDown2 ls 1 len
 
-          testls = ["..##.......", "#...#...#..", ".#....#..#.", "..#.#...#.#", ".#...##..#.", "..#.##.....", ".#.#.#....#", ".#........#", "#.##...#...", "#...##....#", ".#..#...#.#"]
-          testlen = length $ head testls
-      putStrLn $ show $ product [r1d1, r3d1, r5d1, r7d1, r1d2]
+      putStrLn $ "Part 1: " ++ show r3d1
+      putStrLn $ "Part 2: " ++ (show $ product [r1d1, r3d1, r5d1, r7d1, r1d2])
