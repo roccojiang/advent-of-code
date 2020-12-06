@@ -1,6 +1,6 @@
-import Data.Map (fromListWith, toList)
+import Data.List (intersect, nub)
 
--- Combine input split by lines into their own separated customs items
+-- Combine input split by double \n into their own separated lists
 combine :: [String] -> [[String]]
 combine [] = []
 combine (x : xs)
@@ -9,34 +9,19 @@ combine (x : xs)
     combine' :: String -> [String] -> [String]
     combine' x xs = x : takeWhile (""/=) xs
 
-frequency :: (Ord a) => [a] -> [(a, Int)]
-frequency xs = toList (fromListWith (+) [(x, 1) | x <- xs])
+-- Sum the count of questions to which *anyone* answered yes
+count1 :: [[String]] -> Int
+count1 = sum . map (length . nub . concat)
 
-distinct :: String -> String
-distinct [] = []
-distinct (c : cs)
- | not (c `elem` cs) = c : distinct cs
- | otherwise = distinct cs
+-- Sum the count of questions to which *everyone* answered yes
+count2 :: [[String]] -> Int
+count2 = sum . map (length . foldr1 intersect)
 
 main :: IO()
 main
   = do
       s <- readFile "06.txt"
-      let distincts = map distinct $ (map concat) (combine (lines s))
-
-          strings = (combine (lines s))
-          -- strings' = map (length . answers . frequency) strings
-
-          strings'' = [["abc"], ["a", "b", "c"], ["ab", "ac"], ["a", "a", "a", "a"], ["b"]]
-          ans = [s | s <- strings'']
-
-          -- strings''' = map frequency' strings''
-          -- strings''' = frequency $ (map.map) distinct strings''
-          strings''' = frequency strings''
-          -- strings'''' = map answers' strings'''
-
-      print $ strings
-      -- print $ strings''''
+      let groups = combine (lines s)
       
-      putStrLn $ "Part 1: " ++ show (sum (map length distincts))
-      -- putStrLn $ "Part 2: " ++ show (sum (map frequency' strings))
+      putStrLn $ "Part 1: " ++ show (count1 groups)
+      putStrLn $ "Part 2: " ++ show (count2 groups)
