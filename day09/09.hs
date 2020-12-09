@@ -15,15 +15,11 @@ findNum ns l = findNum' (take l ns) (drop l ns) ns
 -- contiguous numbers that sum to the invalid number given in findNum
 findWeak :: [Int] -> Int -> Int
 findWeak ns num
-  = findWeak' ns []
+  | num `elem` prefixSum = minimum lSum + maximum lSum
+  | otherwise            = findWeak (drop 1 ns) num
   where
-    findWeak' :: [Int] -> [Int] -> Int
-    findWeak' (n : ns) nsPrev
-      | 0 `elem` subtrs = minimum lSum + maximum lSum
-      | otherwise       = findWeak' ns (n : nsPrev)
-      where
-        subtrs = takeWhile (>=0) $ scanl (-) num nsPrev
-        lSum   = take (length subtrs - 1) nsPrev
+    prefixSum = takeWhile (<=num) $ scanl1 (+) ns
+    lSum      = take (length prefixSum) ns
 
 main :: IO()
 main
