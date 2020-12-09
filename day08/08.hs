@@ -34,6 +34,8 @@ parseInstrs is
           curOp   = fst (snd i)
           curArg  = snd (snd i)
 
+-- Returns a Just Int for the accumulator if the instructions finish;
+-- otherwise Nothing if it results in infinite loop
 checkFinish :: [Instr] -> Maybe Int
 checkFinish is
   = parseInstrs' is is [] 0
@@ -53,6 +55,7 @@ checkFinish is
           curOp   = fst (snd i)
           curArg  = snd (snd i)
 
+-- Returns the traceback of which lines were run up till infinite loop
 traceback :: [Instr] -> [Int]
 traceback is
   = parseInstrs' is is [] 0
@@ -72,6 +75,7 @@ traceback is
           curOp   = fst (snd i)
           curArg  = snd (snd i)
 
+-- Replace the line causing an infinite loop and return the accumulator
 replaceLine :: [Instr] -> [Int] -> Int
 replaceLine is (n : ns) = case curOp of
   "nop" -> case (checkFinish (is' ++ [(n, ("jmp", curArg))] ++ is'')) of
@@ -92,12 +96,6 @@ main
   = do
       s <- readFile "08.txt"
       let code = getInstrs (lines s)
-
-          test' = ["nop +0","acc +1","jmp +4","acc +3","jmp -3","acc -99","acc +1","jmp -4","acc +6"]
-          test  = getInstrs test'
-
-          testFix' = ["nop +0","acc +1","jmp +4","acc +3","jmp -3","acc -99","acc +1","nop -4","acc +6"]
-          testFix  = getInstrs testFix'
 
       putStrLn $ "Part 1: " ++ show (parseInstrs code)
       putStrLn $ "Part 2: " ++ show (replaceLine code (traceback code))
