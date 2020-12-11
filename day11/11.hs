@@ -39,7 +39,7 @@ main
       s <- readFile "11.txt"
       let s' = lines s
           ss = [((x, y), c) | (y, row) <- zip [0..] s', (x, c) <- zip [0..] row]
-          ss' = applyRound $ last $ takeWhile (\x -> applyRound x /= x) $ iterate applyRound ss
+          ss' = until (\x -> applyRound x == x) applyRound ss
 
           t  = ["L.LL.LL.LL","LLLLLLL.LL","L.L.L..L..","LLLL.LL.LL","L.LL.LL.LL","L.LLLLL.LL","..L.L.....","LLLLLLLLLL","L.LLLLLL.L","L.LLLLL.LL"]
           t' = [((x, y), c) | (y, row) <- zip [0..] t, (x, c) <- zip [0..] row]
