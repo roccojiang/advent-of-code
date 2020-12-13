@@ -1,4 +1,4 @@
-import Data.Maybe ( mapMaybe )
+import Data.Maybe ( mapMaybe, fromMaybe )
 import Data.List ( foldl1' )
 import Text.Read ( readMaybe )
 
@@ -14,8 +14,8 @@ splitComma s = case dropWhile (==',') s of
 parse1 :: String -> (Int, [Int])
 parse1 s = (read t :: Int, ids)
   where
-    (t : ids' : []) = lines s
-    ids             = mapMaybe readMaybe (splitComma ids') :: [Int]
+    [t, ids'] = lines s
+    ids       = mapMaybe readMaybe (splitComma ids') :: [Int]
 
 -- Get the ID of the earliest bus multiplied by the num of mins needed to wait
 earliestBus :: (Int, [Int]) -> Int
@@ -30,11 +30,9 @@ earliestBus (t, ids)
 parse2 :: String -> [Integer]
 parse2 s = ids
   where
-    (_ : ids'' : []) = lines s
-    ids'             = map readMaybe (splitComma ids'') :: [Maybe Integer]
-    ids              = map (\n -> case n of
-                              Just x  -> x
-                              Nothing -> 0) ids'
+    [_, ids''] = lines s
+    ids'       = map readMaybe (splitComma ids'') :: [Maybe Integer]
+    ids        = map (fromMaybe 0) ids'
 
 -- Get equations for (a, n) in the form of 't = -a mod n'
 getEqs :: [Integer] -> [(Integer, Integer)]
@@ -50,7 +48,7 @@ getEqs ns = getEqs' ns 0
 bezout :: Integer -> Integer -> (Integer, Integer)
 bezout a b
   | b == 0         = (1, 0)
-  | otherwise      = (v', (u' - q * v'))
+  | otherwise      = (v', u' - q * v')
   where
     (q, r)   = quotRem a b
     (u', v') = bezout b r
@@ -68,7 +66,7 @@ earliestTime :: [(Integer, Integer)] -> Integer
 earliestTime ns = t
   where
     (a, n) = foldl1' solveEqPair ns
-    t      = (abs a) `mod` n
+    t      = abs a `mod` n
 
 main :: IO()
 main
