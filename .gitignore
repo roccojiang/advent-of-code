@@ -45,6 +45,9 @@ hs_err_pid*
 
 # End of https://www.toptal.com/developers/gitignore/api/scala,metals,macos
 
+# VSCode
+.vscode
+
 /.bsp/
 target/
 .scalafmt.conf
