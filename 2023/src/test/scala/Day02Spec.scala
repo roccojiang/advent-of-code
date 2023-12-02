@@ -1,16 +1,16 @@
-package day01
+package day02
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers._
 
 class Day01Spec extends AnyFlatSpec {
   "Part 1" should "work for sample input" in {
-    val input = Day01.parse("day01/sample1.txt")
-    Day01.part1(input) shouldBe 142
+    val input = Day02.parse("day02/sample.txt")
+    Day02.part1(input) shouldBe 8
   }
 
   "Part 2" should "work for sample input" in {
-    val input = Day01.parse("day01/sample2.txt")
-    Day01.part2(input) shouldBe 281
+    val input = Day02.parse("day02/sample.txt")
+    Day02.part2(input) shouldBe 2286
   }
 }
