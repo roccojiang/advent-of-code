@@ -73,7 +73,7 @@ object Day02 {
   def main(args: Array[String]): Unit = {
     val games = parse("day02/input.txt")
 
-    println("Part 1: " + part1(games))
-    println("Part 2: " + part2(games))
+    println("Day 02 part 1: " + part1(games))
+    println("Day 02 part 2: " + part2(games))
   }
 }
