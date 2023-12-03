@@ -2,13 +2,14 @@ package day03
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers._
-
 import parsley.Success
+
+import Day03.Coord
 
 class Day03Spec extends AnyFlatSpec {
   "Parser" should "parse numbers and symbols with their positions correctly" in {
     val input = "...123..@..34..\n..#..74..%"
-    Day03.parser.schematic.parse(input) shouldBe Success(List(List((Left(123),(0,5)), (Right('@'),(0,8)), (Left(34),(0,12))), List((Right('#'),(1,2)), (Left(74),(1,6)), (Right('%'),(1,9)))))
+    Day03.parser.schematic.parse(input) shouldBe Success(List(List((Left(123),Coord(5,0)), (Right('@'),Coord(8,0)), (Left(34),Coord(12,0))), List((Right('#'),Coord(2,1)), (Left(74),Coord(6,1)), (Right('%'),Coord(9,1)))))
   }
 
   "Part 1" should "work for sample input" in {
