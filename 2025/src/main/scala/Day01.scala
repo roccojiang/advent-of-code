@@ -6,7 +6,7 @@ import scala.io.Source
   val rotations = parse("day01/input.txt")
 
   println(s"Day 01 part 1: ${part1(rotations)}")
-  println(s"Day 02 part 2: ${part2(rotations)}")
+  println(s"Day 01 part 2: ${part2(rotations)}")
 }
 
 type Degrees = Int
