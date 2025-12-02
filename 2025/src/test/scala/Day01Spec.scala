@@ -4,10 +4,12 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers._
 
 class Day01Spec extends AnyFlatSpec {
-  val sampleInput = Seq("L68", "L30", "R48", "L5", "R60", "L55", "L1", "L99", "R14", "L82")
+  val sampleInput =
+    Seq("L68", "L30", "R48", "L5", "R60", "L55", "L1", "L99", "R14", "L82")
 
   "Part 1" should "calculate the correct rotations" in {
-    rotateSequence(parse(sampleInput)).map(_.position) shouldBe Seq(50, 82, 52, 0, 95, 55, 0, 99, 0, 14, 32)
+    rotateSequence(parse(sampleInput)).map(_.position) shouldBe Seq(50, 82, 52,
+      0, 95, 55, 0, 99, 0, 14, 32)
   }
 
   it should "count the correct times the dial points at zero" in {

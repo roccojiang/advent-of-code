@@ -16,7 +16,8 @@ val DialStartPosition: Degrees = 50
 val DialSize: Int = 100
 
 def parse(filepath: String): Seq[Rotation] =
-  Source.fromResource(filepath)
+  Source
+    .fromResource(filepath)
     .getLines()
     .map(parseRotation)
     .toSeq
@@ -38,15 +39,18 @@ case class Dial(position: Degrees = DialStartPosition, passes: Int = 0) {
       else position
     val fullRotations = (rotation.abs - distanceToNextZero) / DialSize
     val passesZeroAtLeastOnce = rotation.abs >= distanceToNextZero
-    val newPasses = passes + (if passesZeroAtLeastOnce then fullRotations + 1 else 0)
+    val newPasses =
+      passes + (if passesZeroAtLeastOnce then fullRotations + 1 else 0)
 
     Dial(newPosition, newPasses)
   }
 }
 
-def rotateSequence(rotations: Seq[Rotation]): Seq[Dial] = rotations.scanLeft(Dial())(_.rotate(_))
+def rotateSequence(rotations: Seq[Rotation]): Seq[Dial] =
+  rotations.scanLeft(Dial())(_.rotate(_))
 
-def part1(rotations: Seq[Rotation]): Int = rotateSequence(rotations).count(_.position == 0)
+def part1(rotations: Seq[Rotation]): Int =
+  rotateSequence(rotations).count(_.position == 0)
 
 def part2(rotations: Seq[Rotation]): Int =
   rotations
@@ -55,5 +59,6 @@ def part2(rotations: Seq[Rotation]): Int =
 
 extension (n: Int) {
   infix def mod(d: Int): Int = math.floorMod(n, d)
-  infix def divMod(d: Int): (Int, Int) = (math.floorDiv(n, d), math.floorMod(n, d))
+  infix def divMod(d: Int): (Int, Int) =
+    (math.floorDiv(n, d), math.floorMod(n, d))
 }
