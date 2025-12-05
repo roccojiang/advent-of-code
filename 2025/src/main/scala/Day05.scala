@@ -17,9 +17,8 @@ def parse(filepath: String): (Set[LongRange], Seq[Long]) = {
     .span(_.nonEmpty)
 
   val freshRanges = ranges.map { s =>
-    s match {
+    s match
       case s"$l-$h" => LongRange(l.toLong, h.toLong)
-    }
   }.toSet
 
   (freshRanges, ids.toSeq.tail.map(_.toLong))
@@ -31,7 +30,7 @@ def part1(freshRanges: Set[LongRange], ids: Seq[Long]): Long =
 def part2(freshRanges: Set[LongRange]): Long =
   freshRanges
     .foldLeft(Set.empty[LongRange])(_ addRange _)
-    .toSeq
+    .iterator // avoid Set from deduplicating ranges of the same size!
     .map(_.size)
     .sum
 
@@ -41,12 +40,12 @@ case class LongRange(start: Long, end: Long) {
   // Alternatively, if we used (start <= other.end + 1) && (end + 1 >= other.start) for the 'intersects' check in addRange,
   // it would help merge adjacent ranges which border each other, but do not intersect
   infix def intersects(other: LongRange): Boolean =
-    (start <= other.end) && (end >= other.start)
+    start <= other.end && end >= other.start
 
   infix def union(other: LongRange): Option[LongRange] =
-    if this intersects other then
-      Some(LongRange(start min other.start, end max other.end))
-    else None
+    Option.when(this intersects other)(
+      LongRange(start min other.start, end max other.end)
+    )
 
   lazy val size: Long = end - start + 1
 }
