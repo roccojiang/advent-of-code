@@ -3,13 +3,13 @@ package day07
 import scala.io.Source
 
 type Manifold = IndexedSeq[IndexedSeq[Char]]
+type BeamLocation = Int
 
 @main def printAnswers: Unit = {
-  val sample = parse("day07/sample.txt")
-
   val manifold = parse("day07/input.txt")
 
   println(s"Day 07 part 1: ${part1(manifold)}")
+  println(s"Day 07 part 2: ${part2(manifold)}")
 }
 
 def parse(filepath: String): Manifold =
@@ -19,25 +19,36 @@ def parse(filepath: String): Manifold =
     .map(_.toIndexedSeq)
     .toIndexedSeq
 
-// Invariants:
-// - No splitters are ever right next to each other (no instances of "^^")
-
-// 1737 splitters
-def part1(manifold: Manifold) = {
-  val startingBeam = Set(manifold.head.indexOf('S'))
+// Pre: no splitters are ever right next to each other (no instances of "^^")
+def simulateTachyon(manifold: Manifold): (Map[BeamLocation, Long], Int) = {
+  val startingBeams = Map(manifold.head.indexOf('S') -> 1L).withDefaultValue(0L)
 
   // First splitter is on the 3rd row
-  val (_, numSplits) = manifold.drop(2).foldLeft((startingBeam, 0)) {
+  manifold.drop(2).foldLeft((startingBeams, 0)) {
     case ((beams, totalSplits), row) =>
-      val newBeams = beams.toSeq.collect {
-        case beam if row(beam) == '^' => Seq(beam - 1, beam + 1)
-        case beam                     => Seq(beam)
-      }.flatten
+      val hitsSplitter: (Int => Boolean) = beam => row(beam) == '^'
 
-      val splits = newBeams.size - beams.size
+      val newBeams = beams.foldLeft(beams) {
+        case (acc, (beam, c)) if hitsSplitter(beam) =>
+          acc
+            .removed(beam)
+            .updated(beam - 1, acc(beam - 1) + c)
+            .updated(beam + 1, acc(beam + 1) + c)
+        case (acc, _) => acc
+      }
 
-      (newBeams.toSet, totalSplits + splits)
+      val splits = beams.keysIterator.count(hitsSplitter)
+
+      (newBeams, totalSplits + splits)
   }
+}
 
+def part1(manifold: Manifold): Int = {
+  val (_, numSplits) = simulateTachyon(manifold)
   numSplits
+}
+
+def part2(manifold: Manifold) = {
+  val (beams, _) = simulateTachyon(manifold)
+  beams.valuesIterator.sum
 }
