@@ -11,4 +11,8 @@ class Day08Spec extends AnyFlatSpec {
     // but in the actual problem it asks to make all 1000 connections!
     part1(positions, 10) shouldBe 40
   }
+
+  "Part 2" should "multiply the x coordinates of the final pair of boxes needed to fully complete the circuit" in {
+    part2(positions) shouldBe 25272
+  }
 }
